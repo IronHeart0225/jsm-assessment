@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useDebounce from '../hooks/useDebounce';
 import { Post, User } from '../types/types';
+import withLogging from '../hoc/withLog';
 
 const Posts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -47,4 +48,4 @@ const Posts = () => {
   );
 }
 
-export default Posts;
+export default withLogging(Posts);
