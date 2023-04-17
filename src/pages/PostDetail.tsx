@@ -23,21 +23,35 @@ const PostDetail = () => {
   }, [post]);
 
   return (
-    <div>
+    <div className="container mt-5">
       {post && (
-        <div>
+        <div className="card p-3 border-0">
           <h2>{post.title}</h2>
           <p>{post.body}</p>
-
-          <h3>Comments:</h3>
-          {comments.map((comment) => (
-            <div key={comment.id}>
-              <h4>{comment.name}</h4>
-              <p>{comment.body}</p>
-            </div>
-          ))}
         </div>
       )}
+      <div className="row mt-3">
+        <div className="col-12 px-5">
+          <h3>Comments:</h3>
+        </div>
+        {comments.map((comment) => (
+          <div className="col-md-6" key={comment.id}>
+            <div className="card p-3 m-2 border-0">
+              <div className="card-header bg-white border-0">
+                {comment.name}
+              </div>
+              <div className="card-body border-0">
+                <blockquote className="blockquote mb-0">
+                  <p>{comment.body}</p>
+                  <footer className="blockquote-footer">
+                    {comment.email}
+                  </footer>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
