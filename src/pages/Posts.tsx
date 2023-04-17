@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useDebounce from '../hooks/useDebounce';
 import { Post, User } from '../types/types';
 import withLogging from '../hoc/withLog';
+import SearchInput from '../components/SearchInput';
 
 const Posts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<string>('');
-
-  const debouncedFilter = useDebounce(filter, 500);
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/posts')
@@ -25,7 +23,7 @@ const Posts = () => {
   const filteredPosts = posts.filter((post) =>
     users.find((user) => user.id === post.userId)?.name
       .toLowerCase()
-      .includes(debouncedFilter.toLowerCase()),
+      .includes(filter.toLowerCase()),
   );
 
   return (
@@ -33,12 +31,9 @@ const Posts = () => {
       <h1>Posts</h1>
       <div className="row">
         <div className="col-md-6">
-          <input
-            type="text"
-            className="form-control"
+          <SearchInput
+            onFilterChange={setFilter}
             placeholder="Filter by user"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
           />
         </div>
       </div>
