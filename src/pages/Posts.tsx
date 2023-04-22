@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Post, User } from '../types/types';
 import withLogging from '../hoc/withLog';
@@ -7,7 +7,8 @@ import SearchInput from '../components/SearchInput';
 const Posts = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [filter, setFilter] = useState<string>('');
+  const [keyword, setKeyword] = useState<string>('');
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/posts')
@@ -20,11 +21,13 @@ const Posts = () => {
       .catch((error) => console.log(error));
   }, []);
 
-  const filteredPosts = posts.filter((post) =>
-    users.find((user) => user.id === post.userId)?.name
-      .toLowerCase()
-      .includes(filter.toLowerCase()),
-  );
+  useMemo(() => {
+    setFilteredPosts(posts.filter((post) =>
+      users.find((user) => user.id === post.userId)?.name
+        .toLowerCase()
+        .includes(keyword.toLowerCase()),
+    ));
+  }, [posts]);
 
   return (
     <div className="container">
@@ -32,7 +35,7 @@ const Posts = () => {
       <div className="row">
         <div className="col-md-6">
           <SearchInput
-            onFilterChange={setFilter}
+            onFilterChange={setKeyword}
             placeholder="Filter by user"
           />
         </div>
